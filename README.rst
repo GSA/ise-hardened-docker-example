@@ -1,39 +1,28 @@
-# ise-hardened-nginx
+ise-hardened-docker-example
+======
 
-A nginx docker image hardened to GSA security requirements
+This is an example repo of docker image hardening Jenkins Pipeline.
 
-## Table of Contents ##
 
-* [Overview](#overview)
-* [Hardening](#hardening)
-* [Technologies](#technologies)
-* [Architecture](#Architecture)
-* [Setup](#setup)
-* [Shared Library](#Shared Library)
+How to setup a new CICD Pipeline for new Docker Image
+------
 
-## Overview
+Step1, Prepare git repo to host jenkins scripts:
 
-This repo refers to the hardened version of GSA's nginx Image. GSA's security settings are
-applied to this image and provided as a base image to be used by other applications. A list of all the
-currently implemented settings may be found in the scripts folder.
+1. Duplicate this GitHub Repo, give it a name like ``ise-hardened-${your-docker-image-descriptor}``
+2. Update ``Dockerfile``, put your source docker image at ``FROM``, update other metadata.
 
-## Hardening
+Step2, Setup Jenkins pipeline in Consol
 
-This image is hardened to GSA requirements. The list of settings can be found in the scripts folder.
+1. Go to Jenkins Console -> ``New Item`` -> Choose ``Pipeline`` or ``Multibranch Pipeline`` project.
+2. Configure Parameters:
+    - Click This Project is parameterized
+    - Add ``artifactoryURL``, ``artifactoryRegistry``, ... parameters. Basically these parameters are the arguments defined in our jenkins shared library - ``hardenDockerImage.groovy``. For full list of parameters, please check https://github.com/GSA/ise-jenkins-shared-library/blob/main/vars/hardenDockerImage.groovy 
+3. Configure SCM:
+    - Pipeline -> Pipeline script from SCM -> Git, fill in Git URL, credentials, branch. You can define a parameter ``gitBranch`` and use ``*/${gitBranch}`` in ``Branch Specifier input box`` -> set ``Script Path`` Jenkinsfile -> Uncheck Lightweight Checkout.
 
-## Technologies
+Step3, Import Jenkins Shared Library into Jenkins System
 
-* Docker
-* Bash
+Jenkins -> Manage Jenkins -> Configure System -> Search: Global Pipeline Libraries
 
-## Architecture
-
-Currently, this build is only for `AMD64` architectures.
-
-## Setup
-
-This image can be found on the GSA Repository. You can build it locally by cloning the repo and running:
-
-```
-$ docker build -t gsa-nginx .
-```
+Fill in https://github.com/GSA/ise-jenkins-shared-library url, it will load the latest jenkins shared library into the runtime, so you can start using those libraries in ``Jenkinsfile``. Check "Load Implicitly" (if not check, you need to manually declare @Library("${LibraryName}") at begin of your Jenkinsfile).
