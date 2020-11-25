@@ -19,7 +19,7 @@ Step2, Setup Jenkins pipeline in Consol
     - Click This Project is parameterized
     - Add ``artifactoryURL``, ``artifactoryRegistry``, ... parameters. Basically these parameters are the arguments defined in our jenkins shared library - ``hardenDockerImage.groovy``. For full list of parameters, please check https://github.com/GSA/ise-jenkins-shared-library/blob/main/vars/hardenDockerImage.groovy 
 3. Configure SCM:
-    - Pipeline -> Pipeline script from SCM -> Git, fill in Git URL, credentials, branch. You can define a parameter ``gitBranch`` and use ``*/${gitBranch}`` in ``Branch Specifier input box`` -> set ``Script Path`` Jenkinsfile -> Uncheck Lightweight Checkout.
+    - Pipeline -> Pipeline script from SCM -> Git, fill in Git URL, credentials, branch. You can define a parameter ``gitBranch`` and use ``*/${gitBranch}`` in ``Branch Specifier input box`` -> set ``Script Path`` Jenkinsfile -> Uncheck ``Lightweight Checkout`` (otherwise you cannot use ``gitBranch`` parameter to control what branch you want to build from.
 
 Step3, Import Jenkins Shared Library into Jenkins System
 
